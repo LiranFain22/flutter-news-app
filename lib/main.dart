@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import './models/article.dart';
+import './models/source.dart';
+
+import './utilities/box.dart';
 
 import 'pages/search_page.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(ArticleAdapter());
+  Hive.registerAdapter(SourceAdapter());
+  box = await Hive.openBox('articlesBox');
   runApp(const MainApp());
 }
-
-// void main() async {
-//   await Hive.initFlutter();
-//   Hive.registerAdapter(ArticleAdapter());
-//   Hive.registerAdapter(ArticlesDataAdapter());
-//   runApp(const MainApp());
-// }
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});

@@ -16,8 +16,8 @@ dependencies:
   hive: 
   hive_flutter: 
   url_launcher: 
-  html: 
   webview_flutter: 
+  intl: 
 
 dev_dependencies:
   flutter_test:

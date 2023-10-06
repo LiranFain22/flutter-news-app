@@ -1,21 +1,13 @@
 import 'dart:convert';
 
-import 'package:hive/hive.dart';
-
 import 'article.dart';
-
-part "articles_data.g.dart";
 
 ArticlesData articlesDataFromJson(String str) =>
     ArticlesData.fromJson(json.decode(str));
 
-@HiveType(typeId: 2)
 class ArticlesData {
-  @HiveField(0)
   final String status;
-  @HiveField(1)
   final int totalResults;
-  @HiveField(2)
   final List<Article> articles;
 
   ArticlesData({

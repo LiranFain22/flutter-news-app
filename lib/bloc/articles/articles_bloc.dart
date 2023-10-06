@@ -7,6 +7,7 @@ import 'package:bloc/bloc.dart';
 import '../../repositories/articles_repository.dart';
 import '../../models/article.dart';
 import '../../models/error.dart';
+import '../../utilities/box.dart';
 
 part 'articles_event.dart';
 part 'articles_state.dart';
@@ -19,24 +20,45 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
 
   FutureOr<void> articlesInitialFetchEvent(
       ArticlesInitialFetchEvent event, Emitter<ArticlesState> emit) async {
-    emit(ArticlesFetchingLoadingState());
+    emit(ArticlesInitLoadingState());
 
-    List<Article> articles =
-        await ArticlesRepository.fetchArticlesBySearch('apple', emit);
+    if (box.get('lastSearch') != null) {
+      List<Article> articles = [];
+      for (Article article in box.get('lastSearch')) {
+        articles.add(article);
+      }
 
-    if (articles.isEmpty) {
-      NewsError newsError = NewsError(
-          status: 'error',
-          code: 'Oops...',
-          message: 'No articles were found from the search results');
-      emit(ArticlesFetchingErrorState(error: newsError));
-    } else {
       emit(ArticlesFetchingSuccessfulState(articles: articles));
+    } else {
+      // otherwise, fetching default articles
+      try {
+        List<Article> articles =
+            await ArticlesRepository.fetchArticlesBySearch('apple', emit);
+
+        if (articles.isEmpty) {
+          NewsError newsError = NewsError(
+              status: 'error',
+              code: 'Oops...',
+              message: 'No articles were found from the search results');
+          emit(ArticlesFetchingErrorState(error: newsError));
+        } else {
+          // storing last search result (Case: user didn't search anything)
+          box.put('lastSearch', articles);
+          emit(ArticlesFetchingSuccessfulState(articles: articles));
+        }
+      } on DioException catch (e) {
+        NewsError newsError = NewsError(
+            status: 'error',
+            code: 'Oops...',
+            message: 'Something went wrong\nplease try again.');
+        emit(ArticlesFetchingErrorState(error: newsError));
+      }
     }
   }
 
   FutureOr<void> articlesSearchEvent(
       ArticlesSearchEvent event, Emitter<ArticlesState> emit) async {
+        emit(ArticlesFetchingLoadingState());
     try {
       List<Article> articles =
           await ArticlesRepository.fetchArticlesBySearchAndDates(
@@ -48,14 +70,15 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
             message: 'No articles were found from the search results');
         emit(ArticlesFetchingErrorState(error: newsError));
       } else {
+        // Store the fetched articles in Hive
+        box.put('lastSearch', articles);
         emit(ArticlesFetchingSuccessfulState(articles: articles));
       }
     } on DioException catch (e) {
-      print(e.response);
       NewsError newsError = NewsError(
           status: 'error',
-          code: 'No Articles',
-          message: 'No articles were found from the search results');
+          code: 'Oops...',
+          message: 'Something went wrong\nplease try again.');
       emit(ArticlesFetchingErrorState(error: newsError));
     }
   }

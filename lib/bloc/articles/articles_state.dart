@@ -7,6 +7,8 @@ abstract class ArticlesActionState extends ArticlesState {}
 
 class ArticlesInitial extends ArticlesState {}
 
+class ArticlesInitLoadingState extends ArticlesState {}
+
 class ArticlesFetchingLoadingState extends ArticlesState {}
 
 class ArticlesFetchingErrorState extends ArticlesState {

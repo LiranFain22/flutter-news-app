@@ -1,38 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'articles_data.dart';
+part of 'source.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ArticlesDataAdapter extends TypeAdapter<ArticlesData> {
+class SourceAdapter extends TypeAdapter<Source> {
   @override
-  final int typeId = 2;
+  final int typeId = 3;
 
   @override
-  ArticlesData read(BinaryReader reader) {
+  Source read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return ArticlesData(
-      status: fields[0] as String,
-      totalResults: fields[1] as int,
-      articles: (fields[2] as List).cast<Article>(),
+    return Source(
+      id: fields[0] as String?,
+      name: fields[1] as String?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, ArticlesData obj) {
+  void write(BinaryWriter writer, Source obj) {
     writer
-      ..writeByte(3)
-      ..writeByte(0)
-      ..write(obj.status)
-      ..writeByte(1)
-      ..write(obj.totalResults)
       ..writeByte(2)
-      ..write(obj.articles);
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.name);
   }
 
   @override
@@ -41,7 +38,7 @@ class ArticlesDataAdapter extends TypeAdapter<ArticlesData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ArticlesDataAdapter &&
+      other is SourceAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

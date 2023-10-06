@@ -1,6 +1,8 @@
 import 'package:hive/hive.dart';
 
-part "article.g.dart";
+import './source.dart';
+
+part 'article.g.dart';
 
 @HiveType(typeId: 1)
 class Article {
@@ -53,28 +55,6 @@ class Article {
       'urlToImage': urlToImage,
       'publishedAt': publishedAt,
       'content': content,
-    };
-  }
-}
-
-class Source {
-  final String? id;
-  final String? name;
-
-  Source({
-    required this.id,
-    required this.name,
-  });
-
-  factory Source.fromJson(Map<String, dynamic> json) => Source(
-        id: json["id"],
-        name: json["name"],
-      );
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
     };
   }
 }

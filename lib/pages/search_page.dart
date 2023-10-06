@@ -44,10 +44,41 @@ class _SearchPageState extends State<SearchPage> {
         builder: (context, state) {
           print(state.runtimeType);
           switch (state.runtimeType) {
-            case ArticlesFetchingLoadingState:
+            case ArticlesInitLoadingState:
               return const SpinKitCircle(
                 color: Colors.blue,
                 size: 50.0,
+              );
+            case ArticlesFetchingLoadingState:
+              return Column(
+                children: [
+                  SearchBar(
+                    search: search,
+                    fromDate: fromDate,
+                    toDate: toDate,
+                    onSearch: (search, fromDate, toDate) {
+                      setState(() {
+                        this.search = search;
+                        this.fromDate = fromDate;
+                        this.toDate = toDate;
+                      });
+                      articlesBloc.add(
+                        ArticlesSearchEvent(
+                          this.search,
+                          this.fromDate,
+                          this.toDate,
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 150),
+                  const Center(
+                    child: SpinKitCircle(
+                      color: Colors.blue,
+                      size: 50.0,
+                    ),
+                  ),
+                ],
               );
             case ArticlesFetchingSuccessfulState:
               final successState = state as ArticlesFetchingSuccessfulState;

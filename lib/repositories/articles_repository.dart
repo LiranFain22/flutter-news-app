@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:html/parser.dart' as htmlParser;
 
 import '../bloc/articles/articles_bloc.dart';
 import '../models/articles_data.dart';
@@ -59,21 +57,6 @@ class ArticlesRepository {
       );
       emit(ArticlesFetchingErrorState(error: newsError));
       return [];
-    }
-  }
-
-  static Future<String?> fetchArticleContent(String? url) async {
-    try {
-      final Response<String> response = await Dio().get(url ?? '');
-      if (response.data != null) {
-        // final String articleHtml = response.data!;
-        // final dom.Document document = htmlParser.parse(articleHtml, generateSpans: true);
-        // final String articleContent = document.body!.text;
-        return response.data;
-      }
-    } on DioException catch (e) {
-      print(e);
-      return '';
     }
   }
 }
