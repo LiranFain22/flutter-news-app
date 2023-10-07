@@ -28,6 +28,7 @@ class _SearchBarState extends State<SearchBar> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
+          // Search Textfield
           TextField(
             onChanged: (searchKey) {
               widget.search = searchKey;
@@ -40,7 +41,10 @@ class _SearchBarState extends State<SearchBar> {
               suffixIcon: const Icon(Icons.search),
             ),
           ),
+
           const SizedBox(height: 5),
+
+          // From and To Date's Textfield
           Row(
             children: [
               Expanded(
@@ -78,7 +82,10 @@ class _SearchBarState extends State<SearchBar> {
               ),
             ],
           ),
+
           const SizedBox(height: 5),
+
+          // Search buttom
           Row(
             children: [
               Expanded(

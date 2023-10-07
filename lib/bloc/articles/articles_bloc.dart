@@ -25,7 +25,9 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
       ArticlesInitialFetchEvent event, Emitter<ArticlesState> emit) async {
     emit(ArticlesInitLoadingState());
 
+    // Check if user made search in app
     if (box.get('lastSearch') != null) {
+      // then, fetching last search articles
       List<Article> articles = [];
       for (Article article in box.get('lastSearch')) {
         articles.add(article);
@@ -49,7 +51,7 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
           box.put('lastSearch', articles);
           emit(ArticlesFetchingSuccessfulState(articles: articles));
         }
-      } on DioException catch (e) {
+      } on DioException catch (_) {
         NewsError newsError = NewsError(
             status: 'error',
             code: 'Oops...',
@@ -77,7 +79,7 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
         box.put('lastSearch', articles);
         emit(ArticlesFetchingSuccessfulState(articles: articles));
       }
-    } on DioException catch (e) {
+    } on DioException catch (_) {
       NewsError newsError = NewsError(
           status: 'error',
           code: 'Oops...',
@@ -111,7 +113,7 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
 
           currentPage++;
         }
-      } on DioException catch (e) {
+      } on DioException catch (_) {
         NewsError newsError = NewsError(
             status: 'error',
             code: 'Oops...',

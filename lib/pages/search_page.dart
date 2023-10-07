@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:news_app/widgets/article_card.dart';
+import 'package:news_app/widgets/loading_indicator.dart';
 import 'package:news_app/widgets/news_appbar.dart';
 import 'package:news_app/widgets/search_bar.dart';
 
@@ -51,13 +52,9 @@ class _SearchPageState extends State<SearchPage> {
         buildWhen: (previous, current) => current is! ArticlesActionState,
         listener: (context, state) {},
         builder: (context, state) {
-          print(state.runtimeType);
           switch (state.runtimeType) {
             case ArticlesInitLoadingState:
-              return const SpinKitCircle(
-                color: Colors.blue,
-                size: 50.0,
-              );
+              return const LoadingIndicator();
             case ArticlesFetchingLoadingState:
               return Column(
                 children: [
@@ -81,12 +78,7 @@ class _SearchPageState extends State<SearchPage> {
                     },
                   ),
                   const SizedBox(height: 150),
-                  const Center(
-                    child: SpinKitCircle(
-                      color: Colors.blue,
-                      size: 50.0,
-                    ),
-                  ),
+                  const LoadingIndicator(),
                 ],
               );
             case ArticlesFetchingSuccessfulState:
@@ -123,10 +115,7 @@ class _SearchPageState extends State<SearchPage> {
                           return Column(
                             children: [
                               ArticleCard(article: article),
-                              const SpinKitCircle(
-                                color: Colors.blue,
-                                size: 50.0,
-                              ),
+                              const LoadingIndicator(),
                             ],
                           );
                         }

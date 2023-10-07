@@ -53,6 +53,7 @@ class ArticleCard extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
+                      // Title
                       Text(
                         article.title,
                         maxLines: 2,
@@ -62,11 +63,17 @@ class ArticleCard extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
+
                       const SizedBox(height: 5),
+                      
+                      // Author
                       article.author != null
                           ? RowInfo(icon: Icons.person, value: article.author!)
                           : const SizedBox.shrink(),
+
                       const SizedBox(height: 5),
+
+                      // Description
                       Text(
                         article.description ?? '',
                         maxLines: 2,

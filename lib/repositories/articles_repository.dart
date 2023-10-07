@@ -7,16 +7,14 @@ import '../models/article.dart';
 import '../models/error.dart';
 
 class ArticlesRepository {
-  static const apiKey1 = 'dc2819231371410b8fa16b586c17ee33'; // Mine
-  static const apiKey2 = 'cfc78a450ce14db3870ffec96d88c85e';
-  static const apiKey3 = 'a5707432dce64fc7916466177806dea4';
+  static const apiKey = 'dc2819231371410b8fa16b586c17ee33';
   static const baseURL = 'https://newsapi.org/v2/everything';
 
   static Future<List<Article>> fetchArticlesBySearch(
       String searchKey, Emitter<ArticlesState> emit) async {
     try {
       Response response =
-          await Dio().get('$baseURL?q=$searchKey&apiKey=$apiKey2');
+          await Dio().get('$baseURL?q=$searchKey&apiKey=$apiKey');
       ArticlesData articlesData = ArticlesData.fromJson(response.data);
 
       if (articlesData.status == 'ok') {
@@ -38,7 +36,7 @@ class ArticlesRepository {
       String fromDate, String toDate, int page, Emitter<ArticlesState> emit) async {
     try {
       Response response = await Dio().get(
-          '$baseURL?q=$searchKey&from=$fromDate&to=$toDate&page=$page&apiKey=$apiKey2');
+          '$baseURL?q=$searchKey&from=$fromDate&to=$toDate&page=$page&apiKey=$apiKey');
       ArticlesData articlesData = ArticlesData.fromJson(response.data);
 
       if (articlesData.status == 'ok') {
@@ -49,7 +47,7 @@ class ArticlesRepository {
         emit(ArticlesFetchingErrorState(error: newsError));
       }
       return [];
-    } on DioException catch (e) {
+    } on DioException catch (_) {
       NewsError newsError = NewsError(
         status: 'error',
         code: 'Oops',

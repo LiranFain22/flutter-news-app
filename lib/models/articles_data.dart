@@ -22,12 +22,4 @@ class ArticlesData {
         articles: List<Article>.from(
             json["articles"].map((x) => Article.fromJson(x))),
       );
-
-  Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'totalResults': totalResults,
-      'articles': List<dynamic>.from(articles.map((x) => x.toJson())),
-    };
-  }
 }

@@ -35,9 +35,9 @@ class _DetailsPageState extends State<DetailsPage> {
     controller = WebViewController()
       ..setNavigationDelegate(NavigationDelegate(
         onPageStarted: (url) {
-          setState(() {
-            loadingPercentage = 0;
-          });
+            setState(() {
+              loadingPercentage = 0;
+            });
         },
         onProgress: (progress) {
           setState(() {
@@ -53,6 +53,14 @@ class _DetailsPageState extends State<DetailsPage> {
       ..loadRequest(
         Uri.parse(widget.article.url!),
       );
+  }
+
+  void _launchURL(String url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -140,12 +148,14 @@ class _DetailsPageState extends State<DetailsPage> {
                               ? widget.article.content.substring(0, 200)
                               : widget.article.content,
                         ),
-                        const SizedBox(height: 3),
+                        const SizedBox(height: 10),
                         InkWell(
                           onTap: () {
-                            setState(() {
-                              isFullContentClicked = true;
-                            });
+                            if (mounted) {
+                              setState(() {
+                                isFullContentClicked = true;
+                              });
+                            }
                           },
                           child: const Text(
                             'Click here to read more',
@@ -162,13 +172,5 @@ class _DetailsPageState extends State<DetailsPage> {
               ),
             ),
     );
-  }
-
-  void _launchURL(String url) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 }
