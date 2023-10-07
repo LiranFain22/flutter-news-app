@@ -22,3 +22,15 @@ class ArticlesSearchEvent extends ArticlesEvent {
     this.toDate,
   );
 }
+
+class LoadMoreArticles extends ArticlesEvent {
+  final String searchKey;
+  final String fromDate;
+  final String toDate;
+
+  LoadMoreArticles(
+    this.searchKey,
+    this.fromDate,
+    this.toDate,
+  );
+}

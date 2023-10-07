@@ -13,9 +13,12 @@ part 'articles_event.dart';
 part 'articles_state.dart';
 
 class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
+  int currentPage = 1;
+
   ArticlesBloc() : super(ArticlesInitial()) {
     on<ArticlesInitialFetchEvent>(articlesInitialFetchEvent);
     on<ArticlesSearchEvent>(articlesSearchEvent);
+    on<LoadMoreArticles>(fetchMoreArticles);
   }
 
   FutureOr<void> articlesInitialFetchEvent(
@@ -58,11 +61,11 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
 
   FutureOr<void> articlesSearchEvent(
       ArticlesSearchEvent event, Emitter<ArticlesState> emit) async {
-        emit(ArticlesFetchingLoadingState());
+    emit(ArticlesFetchingLoadingState());
     try {
       List<Article> articles =
           await ArticlesRepository.fetchArticlesBySearchAndDates(
-              event.searchKey, event.fromDate, event.toDate, emit);
+              event.searchKey, event.fromDate, event.toDate, currentPage, emit);
       if (articles.isEmpty) {
         NewsError newsError = NewsError(
             status: 'error',
@@ -80,6 +83,41 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
           code: 'Oops...',
           message: 'Something went wrong\nplease try again.');
       emit(ArticlesFetchingErrorState(error: newsError));
+    }
+  }
+
+  FutureOr<void> fetchMoreArticles(
+      LoadMoreArticles event, Emitter<ArticlesState> emit) async {
+    if (state is ArticlesFetchingSuccessfulState) {
+      final currentState = state as ArticlesFetchingSuccessfulState;
+      final currentArticles = currentState.articles;
+
+      try {
+        List<Article> newArticles =
+            await ArticlesRepository.fetchArticlesBySearchAndDates(
+          event.searchKey,
+          event.fromDate,
+          event.toDate,
+          currentPage + 1,
+          emit,
+        );
+
+        if (newArticles.isNotEmpty) {
+          List<Article> updatedArticles = List.of(currentArticles)
+            ..addAll(newArticles);
+
+          // Upadating the state
+          emit(ArticlesFetchingSuccessfulState(articles: updatedArticles));
+
+          currentPage++;
+        }
+      } on DioException catch (e) {
+        NewsError newsError = NewsError(
+            status: 'error',
+            code: 'Oops...',
+            message: 'Something went wrong\nplease try again.');
+        emit(ArticlesFetchingErrorState(error: newsError));
+      }
     }
   }
 }

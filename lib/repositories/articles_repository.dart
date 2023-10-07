@@ -35,10 +35,10 @@ class ArticlesRepository {
   }
 
   static Future<List<Article>> fetchArticlesBySearchAndDates(String searchKey,
-      String fromDate, String toDate, Emitter<ArticlesState> emit) async {
+      String fromDate, String toDate, int page, Emitter<ArticlesState> emit) async {
     try {
       Response response = await Dio().get(
-          '$baseURL?q=$searchKey&from=$fromDate&to=$toDate&apiKey=$apiKey2');
+          '$baseURL?q=$searchKey&from=$fromDate&to=$toDate&page=$page&apiKey=$apiKey2');
       ArticlesData articlesData = ArticlesData.fromJson(response.data);
 
       if (articlesData.status == 'ok') {

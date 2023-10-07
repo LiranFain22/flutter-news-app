@@ -17,6 +17,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final ArticlesBloc articlesBloc = ArticlesBloc();
+  final ScrollController _scrollController = ScrollController();
   var search = '';
   var fromDate =
       '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}';
@@ -27,6 +28,14 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     articlesBloc.add(ArticlesInitialFetchEvent(search));
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        // User has reached the end of the list
+        articlesBloc.add(LoadMoreArticles(search, fromDate, toDate));
+      }
+    });
   }
 
   @override
@@ -106,9 +115,21 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                   Expanded(
                     child: ListView.builder(
+                      controller: _scrollController,
                       itemCount: articles.length,
                       itemBuilder: (context, index) {
                         final article = articles[index];
+                        if (index == articles.length - 1) {
+                          return Column(
+                            children: [
+                              ArticleCard(article: article),
+                              const SpinKitCircle(
+                                color: Colors.blue,
+                                size: 50.0,
+                              ),
+                            ],
+                          );
+                        }
                         return ArticleCard(article: article);
                       },
                     ),
