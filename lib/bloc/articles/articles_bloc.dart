@@ -39,7 +39,7 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
           NewsError newsError = NewsError(
               status: 'error',
               code: 'Oops...',
-              message: 'No articles were found from the search results');
+              message: 'No articles were found');
           emit(ArticlesFetchingErrorState(error: newsError));
         } else {
           // storing last search result (Case: user didn't search anything)
@@ -67,7 +67,7 @@ class ArticlesBloc extends Bloc<ArticlesEvent, ArticlesState> {
         NewsError newsError = NewsError(
             status: 'error',
             code: 'Oops...',
-            message: 'No articles were found from the search results');
+            message: 'No articles were found');
         emit(ArticlesFetchingErrorState(error: newsError));
       } else {
         // Store the fetched articles in Hive

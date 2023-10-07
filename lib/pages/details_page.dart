@@ -62,17 +62,9 @@ class _DetailsPageState extends State<DetailsPage> {
         isArticleTapped: true,
         actions: widget.article.url != null
             ? [
-                // IconButton(
-                //   onPressed: () => _launchURL(widget.article.url!),
-                //   icon: const Icon(Icons.web),
-                // )
                 IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isFullContentClicked = !isFullContentClicked;
-                    });
-                  },
-                  icon: const Icon(Icons.article_outlined),
+                  onPressed: () => _launchURL(widget.article.url!),
+                  icon: const Icon(Icons.link_outlined),
                 )
               ]
             : [],
@@ -141,31 +133,31 @@ class _DetailsPageState extends State<DetailsPage> {
                   // Content
                   Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Text(widget.article.content),
-                  ),
-
-                  const Divider(),
-
-                  // 'Get full content' - text
-                  const Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text(
-                      'To Get full content click on the top right icon',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                      ),
+                    child: Column(
+                      children: [
+                        Text(
+                          widget.article.content.length >= 200
+                              ? widget.article.content.substring(0, 200)
+                              : widget.article.content,
+                        ),
+                        const SizedBox(height: 3),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              isFullContentClicked = true;
+                            });
+                          },
+                          child: const Text(
+                            'Click here to read more',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-
-                  const Divider(),
-
-                  // Link to Source
-                  widget.article.url != null
-                      ? TextButton(
-                          onPressed: () => _launchURL(widget.article.url!),
-                          child: const Text('Link to Source'),
-                        )
-                      : const SizedBox.shrink()
                 ],
               ),
             ),
